@@ -28,5 +28,10 @@ public class LibraryCatalog {
                 .filter(book -> book.getGenre().equalsIgnoreCase(genre))
                 .collect(Collectors.toList());
     }
+    public List<Book> searchByYear(int year) {
+        return books.stream()
+                .filter(book -> book.getYear() == year)
+                .collect(Collectors.toList());
+    }
 
 }

@@ -36,4 +36,12 @@ public class LibraryCatalogTest {
         List<Book> books = catalog.searchByGenre("Programming");
         assertTrue(books.contains(book));
     }
+    @Test
+    public void testSearchByYear(){
+        LibraryCatalog catalog = new LibraryCatalog();
+        Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
+        catalog.addBook(book);
+        List<Book> books = catalog.searchByYear(2012);
+        assertTrue(books.contains(book));
+    }
    }
