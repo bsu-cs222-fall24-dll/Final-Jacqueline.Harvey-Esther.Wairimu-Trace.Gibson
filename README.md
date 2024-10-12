@@ -11,7 +11,7 @@ IntelliJ IDEA with Gradle support
 JavaFX 17 or higher
 SQLite JDBC driver
 
-Team Members 
+Team Members :
 Esther Wairimu
 Jacqueline Harvey
 Trace Gibson
