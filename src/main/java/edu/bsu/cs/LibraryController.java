@@ -4,7 +4,7 @@ import java.util.List;
 
 // This class focuses on how the data is manipulated and stored
 public class LibraryController {
-    private LibraryModel catalog;
+    private final LibraryModel catalog;
     private int bookCount = 0;
 
     // Constructor that takes catalog (LibraryModel) as input

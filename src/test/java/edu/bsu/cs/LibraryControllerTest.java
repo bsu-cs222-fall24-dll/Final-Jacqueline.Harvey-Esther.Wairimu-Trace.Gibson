@@ -13,5 +13,30 @@ public class LibraryControllerTest {
         assertEquals(1, controller.getBookCount());  // Check if the book count is correct
         assertTrue(controller.searchByTitle("Clean Code").contains(book));  // Check if the book is found by title
     }
+    @Test
+    public void testSearchByAuthor() {
+        LibraryModel catalog = new LibraryModel();
+        LibraryController controller = new LibraryController(catalog);
+        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
+        controller.addBook(book);
+        assertTrue(controller.searchByAuthor("Robert C. Martin").contains(book));
+    }
+    @Test
+    public void testSearchByGenre() {
+        LibraryModel catalog = new LibraryModel();
+        LibraryController controller = new LibraryController(catalog);
+        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
+        controller.addBook(book);
+        assertTrue(controller.searchByGenre("Programming").contains(book));
+    }
+    @Test
+    public void testSearchByYear() {
+        LibraryModel catalog = new LibraryModel();
+        LibraryController controller = new LibraryController(catalog);
+        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
+        controller.addBook(book);
+        assertTrue(controller.searchByYear(2012).contains(book));
+    }
+
 
 }
