@@ -16,7 +16,12 @@ public class LibraryCatalog {
     } // Method to search books by title
     public List<Book> searchByTitle(String title) {
         return books.stream() //It creates a sequence of books to work with
-                .filter(book -> book.getTitle().equalsIgnoreCase(title))//It filters the list to find books that match the title.
+                .filter(book -> book.getTitle().equalsIgnoreCase(title))//It filters the list to find books that match the author.
                 .collect(Collectors.toList());
-    }
-}
+    }// Method to search books by Author
+    public List<Book> searchByAuthor(String author) {
+       return books.stream() //It creates a sequence of books to work with
+            .filter(book -> book.getAuthor().equalsIgnoreCase(author))//It filters the list to find books that match the author.
+            .collect(Collectors.toList());
+
+}}
