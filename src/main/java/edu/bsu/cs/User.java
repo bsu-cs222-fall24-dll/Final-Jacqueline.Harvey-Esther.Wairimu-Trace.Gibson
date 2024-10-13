@@ -1,6 +1,7 @@
 package edu.bsu.cs;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class User {
     private final String userName;
@@ -36,4 +37,16 @@ public class User {
     }public List<Book> getrecommendedBooks(){
         return recommendedBooks;
     }
+    public List<Book> getRecommendations(LibraryModel catalog) {
+    List<Book> recommendations = new ArrayList<>();
+    for (Book favoriteBook : favouriteBooks) {
+        // Search for books by the same author
+        recommendations.addAll(catalog.searchByAuthor(favoriteBook.getAuthor()));
+        // Search for books in the same genre
+        recommendations.addAll(catalog.searchByGenre(favoriteBook.getGenre()));
+    }
+    // Remove duplicates if needed
+    return recommendations.stream().distinct().collect(Collectors.toList());
+}
+
 }

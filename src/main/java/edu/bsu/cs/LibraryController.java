@@ -32,7 +32,10 @@ public class LibraryController {
     }
     // Method to get the number of books in the catalog
     public int getBookCount() {
-        System.out.println("Book Count: ");
         return bookCount;
     }
+    public List<Book> getUserRecommendations(User user) {
+        return user.getRecommendations(catalog);
+    }
+
 }

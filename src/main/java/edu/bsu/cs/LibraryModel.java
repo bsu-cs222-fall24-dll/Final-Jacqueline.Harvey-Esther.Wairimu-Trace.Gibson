@@ -34,4 +34,7 @@ public class LibraryModel {
                 .collect(Collectors.toList());
     }
 
+    public List<Book> getAllBooks() {
+        return books;
+    }
 }
