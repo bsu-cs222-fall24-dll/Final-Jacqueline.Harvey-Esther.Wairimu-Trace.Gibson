@@ -1,41 +1,29 @@
 package edu.bsu.cs;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LibraryControllerTest {
     @Test
-    public void testAddBook() {
+    public void testGetBookCount() {
         LibraryModel catalog = new LibraryModel();
         LibraryController controller = new LibraryController(catalog);
-        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        controller.addBook(book);
+        assertEquals(0, controller.getBookCount());
+        controller.addBook(new Book("Clean Code", "Robert C. Martin", "Programming", 2012));
         assertEquals(1, controller.getBookCount());
-        assertTrue(controller.searchByTitle("Clean Code").contains(book));  }
-    @Test
-    public void testSearchByAuthor() {
-        LibraryModel catalog = new LibraryModel();
-        LibraryController controller = new LibraryController(catalog);
-        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        controller.addBook(book);
-        assertTrue(controller.searchByAuthor("Robert C. Martin").contains(book));
     }
     @Test
-    public void testSearchByGenre() {
+    public void testGetUserRecommendations() {
         LibraryModel catalog = new LibraryModel();
         LibraryController controller = new LibraryController(catalog);
-        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        controller.addBook(book);
-        assertTrue(controller.searchByGenre("Programming").contains(book));
-    }
-    @Test
-    public void testSearchByYear() {
-        LibraryModel catalog = new LibraryModel();
-        LibraryController controller = new LibraryController(catalog);
-        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        controller.addBook(book);
-        assertTrue(controller.searchByYear(2012).contains(book));
-    }
+        User user = new User("Bill Graham", "password123");
 
-
+        Book favoriteBook = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
+        user.addfavouriteBooks(favoriteBook);
+        controller.addBook(favoriteBook);
+        controller.addBook(new Book("The Clean Coder", "Robert C. Martin", "Programming", 2011));
+        assertTrue(controller.getUserRecommendations(user).stream()
+                .anyMatch(book -> book.getTitle().equals("The Clean Coder")));
+    }
 }

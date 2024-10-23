@@ -33,7 +33,6 @@ public class LibraryModel {
                 .filter(book -> book.getYear() == year)
                 .collect(Collectors.toList());
     }
-
     public List<Book> getAllBooks() {
         return books;
     }
