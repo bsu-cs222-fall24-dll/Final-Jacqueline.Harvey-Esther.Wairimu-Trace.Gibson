@@ -17,8 +17,8 @@ public class Main {
         List<Book> allBooks = catalog.getAllBooks();
         System.out.println("\nBooks in the catalog:");
         for (Book book : allBooks) {
-            System.out.println("Title: " + book.getTitle() + ", Author: " + book.getAuthor() +
-                    ", Genre: " + book.getGenre() + ", Year: " + book.getYear());
+            System.out.println("Title: " + book.title() + ", Author: " + book.author() +
+                    ", Genre: " + book.genre() + ", Year: " + book.year());
         }
         User user = new User("Bill Graham", "password123");
         user.addfavouriteBooks(new Book("1984", "George Orwell", "Dystopian", 1949));
@@ -27,7 +27,7 @@ public class Main {
         List<Book> recommendations = controller.getUserRecommendations(user);
         System.out.println("\nRecommended books:");
         for (Book recBook : recommendations) {
-            System.out.println("Title: " + recBook.getTitle() + ", Author: " + recBook.getAuthor());
+            System.out.println("Title: " + recBook.title() + ", Author: " + recBook.author());
         }
     }
 }

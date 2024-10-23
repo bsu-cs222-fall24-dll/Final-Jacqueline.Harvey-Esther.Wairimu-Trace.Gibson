@@ -24,6 +24,6 @@ public class LibraryControllerTest {
         controller.addBook(favoriteBook);
         controller.addBook(new Book("The Clean Coder", "Robert C. Martin", "Programming", 2011));
         assertTrue(controller.getUserRecommendations(user).stream()
-                .anyMatch(book -> book.getTitle().equals("The Clean Coder")));
+                .anyMatch(book -> book.title().equals("The Clean Coder")));
     }
 }

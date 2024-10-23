@@ -40,8 +40,8 @@ public class User {
     public List<Book> getRecommendations(LibraryModel catalog) {
         List<Book> recommendations = new ArrayList<>();
         for (Book favoriteBook : favouriteBooks) {
-            recommendations.addAll(catalog.searchByAuthor(favoriteBook.getAuthor()));
-            recommendations.addAll(catalog.searchByGenre(favoriteBook.getGenre()));
+            recommendations.addAll(catalog.searchByAuthor(favoriteBook.author()));
+            recommendations.addAll(catalog.searchByGenre(favoriteBook.genre()));
         }
         return recommendations.stream().distinct().collect(Collectors.toList());
     }
