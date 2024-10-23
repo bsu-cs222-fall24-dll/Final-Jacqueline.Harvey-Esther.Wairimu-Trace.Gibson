@@ -16,7 +16,7 @@ public class User {
         this.favouriteBooks = new ArrayList<>();
         this.continueReading = new ArrayList<>();
         this.recommendedBooks = new ArrayList<>();
-        //method to add a book to the user's favourite list
+
     } public String getuserName(){
         return userName;
     } public String getpassword(){
@@ -38,15 +38,12 @@ public class User {
         return recommendedBooks;
     }
     public List<Book> getRecommendations(LibraryModel catalog) {
-    List<Book> recommendations = new ArrayList<>();
-    for (Book favoriteBook : favouriteBooks) {
-        // Search for books by the same author
-        recommendations.addAll(catalog.searchByAuthor(favoriteBook.getAuthor()));
-        // Search for books in the same genre
-        recommendations.addAll(catalog.searchByGenre(favoriteBook.getGenre()));
+        List<Book> recommendations = new ArrayList<>();
+        for (Book favoriteBook : favouriteBooks) {
+            recommendations.addAll(catalog.searchByAuthor(favoriteBook.getAuthor()));
+            recommendations.addAll(catalog.searchByGenre(favoriteBook.getGenre()));
+        }
+        return recommendations.stream().distinct().collect(Collectors.toList());
     }
-    // Remove duplicates if needed
-    return recommendations.stream().distinct().collect(Collectors.toList());
-}
 
 }

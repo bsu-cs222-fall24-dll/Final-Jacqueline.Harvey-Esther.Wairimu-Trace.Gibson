@@ -2,7 +2,7 @@ package edu.bsu.cs;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.List;
-// Asserts that the book was added to the catalog
+
 public class LibraryModelTest {
    @Test
     public void testAddBook() {

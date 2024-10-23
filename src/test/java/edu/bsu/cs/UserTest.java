@@ -15,15 +15,13 @@ public class UserTest {
         assertEquals("password123", user.getpassword());
         Assertions.assertNotEquals(null, user);
     }@Test
-    //asserts that the  favourite books list contains added book
     public void testAddFavouriteBook(){
         User user = new User("Bill Graham", "password123");
         Assertions.assertNotNull(user);
         Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
         user.addfavouriteBooks(book);
-       assertTrue(user.getfavouriteBooks().contains(book));
+        assertTrue(user.getfavouriteBooks().contains(book));
     }@Test
-    // Asserts that the continue reading list contains the book being read
     public void testAddContinueReading(){
         User user = new User("Bill Graham", "password123");
         Assertions.assertNotNull(user);
