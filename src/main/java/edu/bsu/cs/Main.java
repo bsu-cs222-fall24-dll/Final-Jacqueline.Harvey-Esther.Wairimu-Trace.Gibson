@@ -21,7 +21,7 @@ public class Main {
                     ", Genre: " + book.genre() + ", Year: " + book.year());
         }
         User user = new User("Bill Graham", "password123");
-        user.addfavouriteBooks(new Book("1984", "George Orwell", "Dystopian", 1949));
+        user.addFavouriteBooks(new Book("1984", "George Orwell", "Dystopian", 1949));
 
         // Get recommendations based on favorite books
         List<Book> recommendations = controller.getUserRecommendations(user);

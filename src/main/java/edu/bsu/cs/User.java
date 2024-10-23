@@ -17,24 +17,24 @@ public class User {
         this.continueReading = new ArrayList<>();
         this.recommendedBooks = new ArrayList<>();
 
-    } public String getuserName(){
+    } public String getUserName(){
         return userName;
-    } public String getpassword(){
+    } public String getPassword(){
         return password;
     }
-    public void addfavouriteBooks(Book book){
+    public void addFavouriteBooks(Book book){
         favouriteBooks.add(book);
         //method to update user's currently reading books
     }public void continueReading(Book book){
         continueReading.add(book);
-    }public void addrecommendedBooks(Book book){
+    }public void addRecommendedBooks(Book book){
         recommendedBooks.add(book);
     }//getters for the methods
-    public List<Book> getfavouriteBooks(){
+    public List<Book> getFavouriteBooks(){
         return favouriteBooks;
-    }public List<Book> getcontinueReading(){
+    }public List<Book> getContinueReading(){
         return continueReading;
-    }public List<Book> getrecommendedBooks(){
+    }public List<Book> getRecommendedBooks(){
         return recommendedBooks;
     }
     public List<Book> getRecommendations(LibraryModel catalog) {

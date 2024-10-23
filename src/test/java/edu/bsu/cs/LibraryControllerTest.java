@@ -20,7 +20,7 @@ public class LibraryControllerTest {
         User user = new User("Bill Graham", "password123");
 
         Book favoriteBook = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        user.addfavouriteBooks(favoriteBook);
+        user.addFavouriteBooks(favoriteBook);
         controller.addBook(favoriteBook);
         controller.addBook(new Book("The Clean Coder", "Robert C. Martin", "Programming", 2011));
         assertTrue(controller.getUserRecommendations(user).stream()
