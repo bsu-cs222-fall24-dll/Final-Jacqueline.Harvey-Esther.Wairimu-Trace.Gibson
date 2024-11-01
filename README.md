@@ -1,4 +1,4 @@
-Project Summary : 
+Overall Project Summary : 
 The purpose of this project is to create a Library Catalog Application; a desktop Java application designed to help users manage a collection of books. 
 The application uses JavaFX for the graphical user interface and SQLite for managing the database.
 Users can add, search, update, and delete books, with each entry containing information like the title, author, genre, and publication year. 
