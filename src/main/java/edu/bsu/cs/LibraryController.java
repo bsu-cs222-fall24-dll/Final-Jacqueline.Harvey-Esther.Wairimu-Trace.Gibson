@@ -9,15 +9,17 @@ public class LibraryController {
     public LibraryController(LibraryModel catalog) {
         this.catalog = catalog;
     }
+
     public void addBook(Book book) {
         catalog.addBook(book);
         bookCount++;
     }
-     public int getBookCount() {
+
+    public int getBookCount() {
         return bookCount;
     }
+
     public List<Book> getUserRecommendations(User user) {
         return user.getRecommendations(catalog);
     }
-
 }

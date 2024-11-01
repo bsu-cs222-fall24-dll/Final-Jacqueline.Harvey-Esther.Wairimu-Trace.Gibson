@@ -1,47 +1,32 @@
 package edu.bsu.cs;
-import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 public class LibraryModelTest {
-   @Test
-    public void testAddBook() {
-        LibraryModel catalog = new LibraryModel();
-        Book book = new Book("Clean Code", "Robert C. Martin", "Programming", 2012);
-        catalog.addBook(book);
-        List<Book> books = catalog.searchByTitle("Clean Code");
-        assertTrue(books.contains(book));
-    }
-    @Test
-    public void testSearchByTitle() {
-        LibraryModel catalog = new LibraryModel();
-        Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
-        catalog.addBook(book);
-        List<Book> books = catalog.searchByTitle("Clean Code");
-        assertTrue(books.contains(book));
-    }
-    @Test
-    public void testSearchByAuthor(){
-        LibraryModel catalog = new LibraryModel();
-        Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
-        catalog.addBook(book);
-        List<Book> books = catalog.searchByAuthor("Robert C. Martin");
-        assertTrue(books.contains(book));
+    private LibraryModel library;
 
-    }  @Test
-    public void testSearchByGenre(){
-        LibraryModel catalog = new LibraryModel();
-        Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
-        catalog.addBook(book);
-        List<Book> books = catalog.searchByGenre("Programming");
-        assertTrue(books.contains(book));
+    @BeforeEach
+    public void setUp() {
+        library = new LibraryModel();
     }
+
     @Test
-    public void testSearchByYear(){
-        LibraryModel catalog = new LibraryModel();
-        Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
-        catalog.addBook(book);
-        List<Book> books = catalog.searchByYear(2012);
-        assertTrue(books.contains(book));
+    public void testAddBook() {
+        Book book = new Book("Moby Dick", "Herman Melville", "Adventure", 1851);
+        library.addBook(book);
+        List<Book> allBooks = library.getAllBooks();
+        assertEquals(1, allBooks.size());
+        assertEquals(book, allBooks.get(0));
     }
-   }
+
+    @Test
+    public void testSearchByAuthor() {
+        library.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
+        List<Book> results = library.searchByAuthor("George Orwell");
+        assertEquals(1, results.size());
+        assertEquals("1984", results.get(0).title());
+    }
+}

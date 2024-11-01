@@ -1,6 +1,7 @@
 package edu.bsu.cs;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class User {
@@ -16,27 +17,40 @@ public class User {
         this.favouriteBooks = new ArrayList<>();
         this.continueReading = new ArrayList<>();
         this.recommendedBooks = new ArrayList<>();
+    }
 
-    } public String getUserName(){
+    public String getUserName(){
         return userName;
-    } public String getPassword(){
+    }
+
+    public String getPassword(){
         return password;
     }
-    public void addFavouriteBooks(Book book){
+
+    public void addFavouriteBook(Book book){
         favouriteBooks.add(book);
-        //method to update user's currently reading books
-    }public void continueReading(Book book){
-        continueReading.add(book);
-    }public void addRecommendedBooks(Book book){
-        recommendedBooks.add(book);
-    }//getters for the methods
-    public List<Book> getFavouriteBooks(){
-        return favouriteBooks;
-    }public List<Book> getContinueReading(){
-        return continueReading;
-    }public List<Book> getRecommendedBooks(){
-        return recommendedBooks;
     }
+
+    public void continueReading(Book book){
+        continueReading.add(book);
+    }
+
+    public void addRecommendedBooks(Book book){
+        recommendedBooks.add(book);
+    }
+
+    public List<Book> getFavouriteBooks(){
+        return new ArrayList<>(favouriteBooks);
+    }
+
+    public List<Book> getContinueReading(){
+        return new ArrayList<>(continueReading);
+    }
+
+    public List<Book> getRecommendedBooks(){
+        return new ArrayList<>(recommendedBooks);
+    }
+
     public List<Book> getRecommendations(LibraryModel catalog) {
         List<Book> recommendations = new ArrayList<>();
         for (Book favoriteBook : favouriteBooks) {
@@ -45,5 +59,4 @@ public class User {
         }
         return recommendations.stream().distinct().collect(Collectors.toList());
     }
-
 }

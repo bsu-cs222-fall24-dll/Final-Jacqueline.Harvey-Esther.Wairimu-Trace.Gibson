@@ -19,7 +19,7 @@ public class UserTest {
         User user = new User("Bill Graham", "password123");
         Assertions.assertNotNull(user);
         Book book = new Book ("Clean code", "Robert C. Martin", "Programming", 2012);
-        user.addFavouriteBooks(book);
+        user.addFavouriteBook(book);
         assertTrue(user.getFavouriteBooks().contains(book));
     }@Test
     public void testAddContinueReading(){
