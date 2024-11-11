@@ -6,19 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("ALL")
 public class DatabaseManager {
-    private Connection conn;
+    private final Connection conn;
 
     public DatabaseManager(String databasePath) {
         try {
-            Class.forName("org.sqlite.JDBC"); // Load the SQLite JDBC driver
+            Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-            createTables(); // Ensure tables are created on initialization
+            createTables();
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException("Database initialization error", e);
         }
     }
-
     public List<Map<String, Object>> executeQuery(String sql) {
         List<Map<String, Object>> results = new ArrayList<>();
         try (Statement statement = conn.createStatement();
