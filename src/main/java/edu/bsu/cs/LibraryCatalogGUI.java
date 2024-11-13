@@ -13,13 +13,12 @@ public class LibraryCatalogGUI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Simple Library GUI");
         primaryStage.show();
-        // Create a VBox layout with spacing of 10
+
         VBox layout = new VBox(10);
-        // Set up the scene and add the layout
+
         TextField inputField = new TextField();
         inputField.setPromptText("Enter item name");
 
-        // Create a button for adding items
         Button addButton = new Button("Add Item");
 
         layout.getChildren().addAll(inputField, addButton);
