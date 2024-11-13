@@ -1,9 +1,10 @@
 package edu.bsu.cs;
-
+import javafx.application.Application;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        Application.launch(LibraryCatalogGUI.class, args);
         // Database manager for reading list, notifications, and bookmarks
         DatabaseManager dbManager = new DatabaseManager("books.db");
         ReadingList readingList = new ReadingList(dbManager);
