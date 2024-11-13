@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
 
 public class LibraryCatalogGUI extends Application {
 
@@ -20,6 +21,11 @@ public class LibraryCatalogGUI extends Application {
         inputField.setPromptText("Enter item name");
 
         Button addButton = new Button("Add Item");
+        // Initialize the ListView to display items
+        ListView<String> listView = new ListView<>();
+
+        // Add TextField, Button, and ListView to the layout
+        layout.getChildren().addAll(inputField, addButton, listView);
 
         layout.getChildren().addAll(inputField, addButton);
         Scene scene = new Scene(layout, 300, 400);
