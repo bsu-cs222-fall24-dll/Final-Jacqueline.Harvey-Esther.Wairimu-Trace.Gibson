@@ -11,4 +11,10 @@ public class LibraryModelTest {
         library.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
         assertEquals(1, library.searchByAuthor("George Orwell").size());
     }
+    @Test
+    public void searchByYear() {
+        LibraryModel library = new LibraryModel();
+        library.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
+        assertEquals(1, library.searchByYear(1949).size());
+    }
 }
