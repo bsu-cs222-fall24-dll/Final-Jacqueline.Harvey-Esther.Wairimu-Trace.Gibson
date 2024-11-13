@@ -7,8 +7,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 
 public class LibraryCatalogGUI extends Application {
+     Label messageLabel;
 
     @Override
     public void start(Stage primaryStage) {
@@ -24,6 +26,19 @@ public class LibraryCatalogGUI extends Application {
         // Initialize the ListView to display items
         ListView<String> listView = new ListView<>();
 
+        // Add event handler to the button
+        addButton.setOnAction(event -> {
+            String item = inputField.getText();
+            if (item != null && !item.equals("")) {
+                listView.getItems().add(item);  // Add item to list
+                inputField.clear();  // Clear input field
+                messageLabel.setText("Item added successfully!");
+            } else {
+                messageLabel.setText("Please enter an item.");
+            }
+        });
+
+        layout.getChildren().addAll(inputField, addButton, listView, messageLabel);
         // Add TextField, Button, and ListView to the layout
         layout.getChildren().addAll(inputField, addButton, listView);
 
