@@ -1,17 +1,14 @@
 package edu.bsu.cs;
-import javafx.application.Application;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Application.launch(LibraryCatalogGUI.class, args);
-        // Database manager for reading list, notifications, and bookmarks
+
         DatabaseManager dbManager = new DatabaseManager("books.db");
         ReadingList readingList = new ReadingList(dbManager);
         Notification notification = new Notification(dbManager);
         Bookmark bookmark = new Bookmark(dbManager);
 
-        // Library model and controller for managing the book catalog
         LibraryModel catalog = new LibraryModel();
         LibraryController controller = new LibraryController(catalog);
 
@@ -19,11 +16,9 @@ public class Main {
         controller.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
         controller.addBook(new Book("Moby Dick", "Herman Melville", "Adventure", 1851));
 
-        // Display total number of books in the catalog
         int totalBooks = controller.getBookCount();
         System.out.println("Total number of books in the catalog: " + totalBooks);
 
-        // Display all books in the catalog
         List<Book> allBooks = catalog.getAllBooks();
         System.out.println("\nBooks in the catalog:");
         for (Book book : allBooks) {
@@ -36,7 +31,7 @@ public class Main {
         List<Book> recommendations = controller.getUserRecommendations(user);
         System.out.println("\nRecommended books:");
         for (Book recBook : recommendations) {
-            System.out.println("Title: " + recBook.title() + ", Author: " + recBook.author());
+            System.out.println("Title: " + recBook.title() + "\nAuthor: " + recBook.author() + "\n");
         }
 
         Book book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1925);

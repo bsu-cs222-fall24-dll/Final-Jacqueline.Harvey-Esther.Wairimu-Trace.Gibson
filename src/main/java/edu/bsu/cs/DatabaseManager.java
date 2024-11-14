@@ -2,11 +2,9 @@ package edu.bsu.cs;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@SuppressWarnings("ALL")
+//@SuppressWarnings("ALL")
 public class DatabaseManager {
     private final Connection conn;
 
@@ -18,24 +16,6 @@ public class DatabaseManager {
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException("Database initialization error", e);
         }
-    }
-    public List<Map<String, Object>> executeQuery(String sql) {
-        List<Map<String, Object>> results = new ArrayList<>();
-        try (Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-
-            while (resultSet.next()) {
-                Map<String, Object> row = new HashMap<>();
-                int columnCount = resultSet.getMetaData().getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
-                }
-                results.add(row);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return results;
     }
 
     private void createTables() {
