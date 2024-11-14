@@ -37,13 +37,8 @@ public class LibraryCatalogGUI extends Application {
                 messageLabel.setText("Please enter an item.");
             }
         });
-
         layout.getChildren().addAll(inputField, addButton, listView, messageLabel);
-        // Add TextField, Button, and ListView to the layout
-        layout.getChildren().addAll(inputField, addButton, listView);
-
-        layout.getChildren().addAll(inputField, addButton);
-        Scene scene = new Scene(layout, 300, 400);
+            Scene scene = new Scene(layout, 300, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
