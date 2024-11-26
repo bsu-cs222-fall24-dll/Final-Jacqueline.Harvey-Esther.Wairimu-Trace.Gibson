@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("application")
-    id("org.openjfx.javafxplugin") version "0.1.0" // Ensure the plugin version is correct
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 group = "edu.bsu.cs"

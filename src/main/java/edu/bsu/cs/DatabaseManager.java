@@ -91,7 +91,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
     public List<String> getNotifications() {
         List<String> notifications = new ArrayList<>();
         String sql = "SELECT release_date FROM notifications";

@@ -39,7 +39,7 @@ public class Main {
 
         notification.addNotification(1, "2024-01-01");
 
-        bookmark.addBookmark(1);
+        bookmark.addBookmark(0);
 
         System.out.println("Books in Classics: " + readingList.getBooksByCategory("Classics"));
         System.out.println("Notifications: " + notification.getNotifications());
