@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class LibraryCatalogGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
-
+        // UI Components for Account Creation
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
         Label passwordLabel = new Label("Password:");
@@ -24,11 +24,13 @@ public class LibraryCatalogGUI extends Application {
             if (username.isEmpty() || password.isEmpty()) {
                 statusLabel.setText("Please fill out all fields.");
             } else {
-
+                // Simulate saving the account and log it to the console
+                System.out.println("Account Created: Username = " + username + ", Password = " + password);
                 statusLabel.setText("Account created successfully!");
             }
         });
 
+        // Layout for the account creation screen
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10));
         grid.setVgap(10);
@@ -41,6 +43,7 @@ public class LibraryCatalogGUI extends Application {
         grid.add(createAccountButton, 1, 2);
         grid.add(statusLabel, 1, 3);
 
+        // Scene and Stage
         Scene scene = new Scene(grid, 300, 200);
         primaryStage.setTitle("Create Account");
         primaryStage.setScene(scene);
