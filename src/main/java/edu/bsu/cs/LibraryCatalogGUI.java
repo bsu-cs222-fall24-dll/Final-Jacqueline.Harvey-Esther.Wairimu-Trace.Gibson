@@ -8,9 +8,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LibraryCatalogGUI extends Application {
 
     private boolean isAccountCreated = false; // Tracks account creation
+    private List<String> readingList = new ArrayList<>(); // List to store books added to reading list
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,7 +42,7 @@ public class LibraryCatalogGUI extends Application {
             if (isAccountCreated) {
                 showSearchBooksScreen(); // Open search screen if account is created
             } else {
-                statusLabel.setText("Please create an account first!");
+                statusLabel.setText("Please create an account first to continue!");
             }
         });
 
@@ -68,29 +72,58 @@ public class LibraryCatalogGUI extends Application {
         TextField searchField = new TextField();
         Button searchButton = new Button("Search");
         Label resultLabel = new Label();
+        Button addToListButton = new Button("Add to Reading List");
+        addToListButton.setDisable(true); // Initially disabled
 
         searchButton.setOnAction(event -> {
             String query = searchField.getText();
             if (query.isEmpty()) {
                 resultLabel.setText("Please enter a search term.");
+                addToListButton.setDisable(true);
             } else {
-                // Simulate database lookup
                 if (isBookInDatabase(query)) {
                     resultLabel.setText("Book found: " + query);
+                    addToListButton.setDisable(false); // Enable the button if the book is found
+                    addToListButton.setOnAction(addEvent -> {
+                        readingList.add(query);
+                        resultLabel.setText(query + " added to your reading list!");
+                        addToListButton.setDisable(true); // Disable to prevent duplicate additions
+                    });
                 } else {
                     resultLabel.setText("Book not found. A notification will be sent to add it.");
                     notifyCreatorToAddBook(query);
+                    addToListButton.setDisable(true);
                 }
             }
         });
 
-        VBox layout = new VBox(10, searchLabel, searchField, searchButton, resultLabel);
+        Button viewListButton = new Button("View Reading List");
+        viewListButton.setOnAction(event -> showReadingListScreen());
+
+        VBox layout = new VBox(10, searchLabel, searchField, searchButton, resultLabel, addToListButton, viewListButton);
         layout.setPadding(new Insets(10));
 
-        Scene scene = new Scene(layout, 300, 200);
+        Scene scene = new Scene(layout, 300, 300);
         searchStage.setTitle("Search Books");
         searchStage.setScene(scene);
         searchStage.show();
+    }
+
+    private void showReadingListScreen() {
+        Stage listStage = new Stage();
+        Label listLabel = new Label("Your Reading List:");
+        ListView<String> listView = new ListView<>();
+        listView.getItems().addAll(readingList);
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(event -> listStage.close());
+
+        VBox layout = new VBox(10, listLabel, listView, closeButton);
+        layout.setPadding(new Insets(10));
+
+        Scene scene = new Scene(layout, 300, 300);
+        listStage.setTitle("Reading List");
+        listStage.setScene(scene);
+        listStage.show();
     }
 
     private boolean isBookInDatabase(String query) {
