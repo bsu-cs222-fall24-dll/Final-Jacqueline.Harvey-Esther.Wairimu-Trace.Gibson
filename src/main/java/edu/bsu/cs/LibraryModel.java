@@ -42,4 +42,15 @@ public class LibraryModel {
     public List<Book> getAllBooks() {
         return new ArrayList<>(books); // Return a copy for safety
     }
+
+    public void addBook(String title, String author, String genre, int year) {
+    }
+
+    public List<Book> getRecommendedBooks(String selectedGenre) {
+        return List.of();
+    }
+
+    public List<Book> searchBooks(String title, String author, String genre, int year) {
+        return List.of();
+    }
 }

@@ -1,142 +1,131 @@
 package edu.bsu.cs;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class LibraryCatalogGUI extends Application {
 
-    private boolean isAccountCreated = false; // Tracks account creation
-    private List<String> readingList = new ArrayList<>(); // List to store books added to reading list
+    private LibraryModel libraryModel;
+    private User currentUser;
+    private Button searchButton;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) {
-        // UI Components for Account Creation
+        libraryModel = new LibraryModel();
+        currentUser = null;
+
+        Button createAccountButton = createButton("Create Account", e -> showCreateAccountScreen());
+        searchButton = createButton("Search Books", e -> showSearchScreen());
+
+        // Disable search if no account is created
+        searchButton.setDisable(true);
+
+        VBox layout = new VBox(20, createAccountButton, searchButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene mainScene = new Scene(layout, 400, 400);
+        primaryStage.setTitle("Library Catalog");
+        primaryStage.setScene(mainScene);
+        primaryStage.show();
+    }
+    private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
+        Button button = new Button(text);
+        button.setOnAction(action);
+        return button;
+    }
+    private void showCreateAccountScreen() {
+        Stage createAccountStage = new Stage();
+        createAccountStage.setTitle("Create Account");
+
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
         Label passwordLabel = new Label("Password:");
         PasswordField passwordField = new PasswordField();
-        Button createAccountButton = new Button("Create Account");
-        Label statusLabel = new Label();
-        Button searchBooksButton = new Button("Search Books");
+        Button createButton = new Button("Create Account");
 
-        createAccountButton.setOnAction(event -> {
+        createButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (username.isEmpty() || password.isEmpty()) {
-                statusLabel.setText("Please fill out all fields.");
-            } else {
-                isAccountCreated = true; // Mark account as created
-                statusLabel.setText("Account created successfully!");
-            }
+            currentUser = new User(username, password);
+            createAccountStage.close();
+            showMessage("Account created successfully!");
+            enableSearchButton();
         });
 
-        searchBooksButton.setOnAction(event -> {
-            if (isAccountCreated) {
-                showSearchBooksScreen(); // Open search screen if account is created
-            } else {
-                statusLabel.setText("Please create an account first to continue!");
-            }
-        });
-
-        // Layout for Account Creation Screen
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
-        grid.setVgap(20);
-        grid.setHgap(20);
-
-        grid.add(usernameLabel, 0, 0);
-        grid.add(usernameField, 1, 0);
-        grid.add(passwordLabel, 0, 1);
-        grid.add(passwordField, 1, 1);
-        grid.add(createAccountButton, 1, 2);
-        grid.add(searchBooksButton, 1, 3);
-        grid.add(statusLabel, 1, 4);
-
-        Scene scene = new Scene(grid, 400, 300);
-        primaryStage.setTitle("Library Catalog - Account Creation");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        VBox layout = new VBox(10, usernameLabel, usernameField, passwordLabel, passwordField, createButton);
+        layout.setAlignment(Pos.CENTER);
+        Scene createAccountScene = new Scene(layout, 400, 400);
+        createAccountStage.setScene(createAccountScene);
+        createAccountStage.show();
     }
-
-    private void showSearchBooksScreen() {
+    private void enableSearchButton() {
+        searchButton.setDisable(false);
+    }
+    private void showSearchScreen() {
+        if (currentUser == null) {
+            showMessage("You must create an account first.");
+            return;
+        }
         Stage searchStage = new Stage();
-        Label searchLabel = new Label("Search by Title, Author, or Genre:");
-        TextField searchField = new TextField();
-        Button searchButton = new Button("Search");
-        Label resultLabel = new Label();
-        Button addToListButton = new Button("Add to Reading List");
-        addToListButton.setDisable(true); // Initially disabled
+        searchStage.setTitle("Search Books");
 
-        searchButton.setOnAction(event -> {
-            String query = searchField.getText();
-            if (query.isEmpty()) {
-                resultLabel.setText("Please enter a search term.");
-                addToListButton.setDisable(true);
-            } else {
-                if (isBookInDatabase(query)) {
-                    resultLabel.setText("Book found: " + query);
-                    addToListButton.setDisable(false); // Enable the button if the book is found
-                    addToListButton.setOnAction(addEvent -> {
-                        readingList.add(query);
-                        resultLabel.setText(query + " added to your reading list!");
-                        addToListButton.setDisable(true); // Disable to prevent duplicate additions
-                    });
-                } else {
-                    resultLabel.setText("Book not found. A notification will be sent to add it.");
-                    notifyCreatorToAddBook(query);
-                    addToListButton.setDisable(true);
-                }
-            }
+        Label titleLabel = new Label("Title:");
+        TextField titleField = new TextField();
+        Label authorLabel = new Label("Author:");
+        TextField authorField = new TextField();
+        Label genreLabel = new Label("Genre:");
+        TextField genreField = new TextField();
+        Label yearLabel = new Label("Year:");
+        TextField yearField = new TextField();
+        Button searchButton = new Button("Search");
+        Label resultLabel = new Label("Search results will appear here.");
+
+        searchButton.setOnAction(e -> {
+            String title = titleField.getText();
+            String author = authorField.getText();
+            String genre = genreField.getText();
+            String yearText = yearField.getText();
+            int year = (yearText.isEmpty()) ? -1 : Integer.parseInt(yearText);
+
+            List<Book> books = libraryModel.searchBooks(title, author, genre, year);
+            displaySearchResults(books, resultLabel);
         });
 
-        Button viewListButton = new Button("View Reading List");
-        viewListButton.setOnAction(event -> showReadingListScreen());
-
-        VBox layout = new VBox(10, searchLabel, searchField, searchButton, resultLabel, addToListButton, viewListButton);
-        layout.setPadding(new Insets(10));
-
-        Scene scene = new Scene(layout, 300, 300);
-        searchStage.setTitle("Search Books");
-        searchStage.setScene(scene);
+        VBox layout = new VBox(10, titleLabel, titleField, authorLabel, authorField, genreLabel, genreField, yearLabel, yearField, searchButton, resultLabel);
+        layout.setAlignment(Pos.CENTER);
+        Scene searchScene = new Scene(layout, 400, 400);
+        searchStage.setScene(searchScene);
         searchStage.show();
     }
-
-    private void showReadingListScreen() {
-        Stage listStage = new Stage();
-        Label listLabel = new Label("Your Reading List:");
-        ListView<String> listView = new ListView<>();
-        listView.getItems().addAll(readingList);
-        Button closeButton = new Button("Close");
-        closeButton.setOnAction(event -> listStage.close());
-
-        VBox layout = new VBox(10, listLabel, listView, closeButton);
-        layout.setPadding(new Insets(10));
-
-        Scene scene = new Scene(layout, 300, 300);
-        listStage.setTitle("Reading List");
-        listStage.setScene(scene);
-        listStage.show();
+    private void displaySearchResults(List<Book> books, Label resultLabel) {
+        if (books.isEmpty()) {
+            resultLabel.setText("No books found.");
+        } else {
+            StringBuilder resultText = new StringBuilder();
+            for (Book book : books) {
+                resultText.append("Title: ").append(book.getTitle()).append("\n")
+                        .append("Author: ").append(book.getAuthor()).append("\n")
+                        .append("Genre: ").append(book.getGenre()).append("\n")
+                        .append("Year: ").append(book.getYear()).append("\n\n");
+            }
+            resultLabel.setText(resultText.toString());
+        }
     }
-
-    private boolean isBookInDatabase(String query) {
-        // Mock database check
-        return query.equalsIgnoreCase("Moby Dick") || query.equalsIgnoreCase("To Kill a Mockingbird");
-    }
-
-    private void notifyCreatorToAddBook(String book) {
-        // Simulate sending a notification
-        System.out.println("Notification sent to add the book: " + book);
-    }
-
-    public static void main(String[] args) {
-        launch(args); // Launch the JavaFX application
+    private void showMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Info");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
