@@ -2,55 +2,54 @@ package edu.bsu.cs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LibraryModel {
-    private final List<Book> books;
+    private List<Book> books;
 
     public LibraryModel() {
-        this.books = new ArrayList<>();
+        // Sample books added to the catalog
+        books = new ArrayList<>();
+        books.add(new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1925));
+        books.add(new Book("1984", "George Orwell", "Dystopian", 1949));
+        books.add(new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 1960));
+    }
+
+    public List<Book> searchBooks(String query, String author, String genre, String year) {
+        List<Book> result = new ArrayList<>();
+        for (Book book : books) {
+            // Convert the year to a string
+            String yearStr = String.valueOf(book.getYear());
+
+            // Search by title, author, genre, or year based on input
+            boolean matches = (book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                    book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
+                    book.getGenre().toLowerCase().contains(query.toLowerCase()) ||
+                    yearStr.contains(year));  // Compare year as a String
+
+            // Check if any specific filters (author, genre, year) match
+            if (!author.isEmpty() && !book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
+                continue;
+            }
+            if (!genre.isEmpty() && !book.getGenre().toLowerCase().contains(genre.toLowerCase())) {
+                continue;
+            }
+            if (!year.isEmpty() && !yearStr.contains(year)) {  // Compare year as a String
+                continue;
+            }
+
+            // If a match is found, add the book to the result list
+            if (matches) {
+                result.add(book);
+            }
+        }
+        return result;
+    }
+
+    // Method to get all books in the catalog
+    public List<Book> getAllBooks() {
+        return books;
     }
 
     public void addBook(Book book) {
-        books.add(book);
-    }
-
-    public List<Book> searchByTitle(String title) {
-        return books.stream()
-                .filter(book -> book.title().equalsIgnoreCase(title))
-                .collect(Collectors.toList());
-    }
-
-    public List<Book> searchByAuthor(String author) {
-        return books.stream()
-                .filter(book -> book.author().equalsIgnoreCase(author))
-                .collect(Collectors.toList());
-    }
-
-    public List<Book> searchByGenre(String genre) {
-        return books.stream()
-                .filter(book -> book.genre().equalsIgnoreCase(genre))
-                .collect(Collectors.toList());
-    }
-
-    public List<Book> searchByYear(int year) {
-        return books.stream()
-                .filter(book -> book.year() == year)
-                .collect(Collectors.toList());
-    }
-
-    public List<Book> getAllBooks() {
-        return new ArrayList<>(books); // Return a copy for safety
-    }
-
-    public void addBook(String title, String author, String genre, int year) {
-    }
-
-    public List<Book> getRecommendedBooks(String selectedGenre) {
-        return List.of();
-    }
-
-    public List<Book> searchBooks(String title, String author, String genre, int year) {
-        return List.of();
     }
 }
