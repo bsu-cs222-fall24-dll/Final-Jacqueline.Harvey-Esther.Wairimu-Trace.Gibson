@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//@SuppressWarnings("ALL")
 public class DatabaseManager {
     private final Connection conn;
 
@@ -90,7 +91,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
     public List<String> getNotifications() {
         List<String> notifications = new ArrayList<>();
         String sql = "SELECT release_date FROM notifications";

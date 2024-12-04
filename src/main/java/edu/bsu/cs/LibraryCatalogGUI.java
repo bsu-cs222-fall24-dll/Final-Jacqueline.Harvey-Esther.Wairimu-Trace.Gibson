@@ -6,14 +6,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryCatalogGUI extends Application {
 
     private LibraryModel libraryModel;
     private User currentUser;
+    private ListView<String> booksListView;
     private Button searchButton;
+    private Label bookCountLabel;
 
     public static void main(String[] args) {
         launch(args);
@@ -26,23 +29,34 @@ public class LibraryCatalogGUI extends Application {
 
         Button createAccountButton = createButton("Create Account", e -> showCreateAccountScreen());
         searchButton = createButton("Search Books", e -> showSearchScreen());
+        Button viewBookmarksButton = createButton("View Bookmarks", e -> showBookmarksScreen());
+        Button notificationsButton = createButton("View Notifications", e -> showNotificationsScreen());
 
-        // Disable search if no account is created
+        // Disable buttons requiring login until an account is created
         searchButton.setDisable(true);
+        viewBookmarksButton.setDisable(true);
+        notificationsButton.setDisable(true);
 
-        VBox layout = new VBox(20, createAccountButton, searchButton);
+        booksListView = new ListView<>();
+        booksListView.setPrefHeight(200);
+
+        bookCountLabel = new Label("Total books: 0");
+
+        VBox layout = new VBox(20, createAccountButton, searchButton, viewBookmarksButton, notificationsButton, booksListView, bookCountLabel);
         layout.setAlignment(Pos.CENTER);
 
-        Scene mainScene = new Scene(layout, 400, 400);
+        Scene mainScene = new Scene(layout, 400, 600);
         primaryStage.setTitle("Library Catalog");
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
+
     private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
         Button button = new Button(text);
         button.setOnAction(action);
         return button;
     }
+
     private void showCreateAccountScreen() {
         Stage createAccountStage = new Stage();
         createAccountStage.setTitle("Create Account");
@@ -56,10 +70,16 @@ public class LibraryCatalogGUI extends Application {
         createButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            currentUser = new User(username, password);
-            createAccountStage.close();
-            showMessage("Account created successfully!");
-            enableSearchButton();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                showMessage("Error: Enter both a username and password to create an account.");
+            } else {
+                currentUser = new User(username, password); // You should securely hash the password in the backend
+                createAccountStage.close();
+                showMessage("Account created successfully!");
+                enableAccountFeatures();
+                displayAllBooks();
+            }
         });
 
         VBox layout = new VBox(10, usernameLabel, usernameField, passwordLabel, passwordField, createButton);
@@ -68,9 +88,20 @@ public class LibraryCatalogGUI extends Application {
         createAccountStage.setScene(createAccountScene);
         createAccountStage.show();
     }
-    private void enableSearchButton() {
+
+    private void enableAccountFeatures() {
         searchButton.setDisable(false);
+        bookCountLabel.setText("Total books: " + libraryModel.getAllBooks().size());
     }
+
+    private void displayAllBooks() {
+        List<Book> books = libraryModel.getAllBooks();
+        booksListView.getItems().clear();
+        for (Book book : books) {
+            booksListView.getItems().add(book.toString());
+        }
+    }
+
     private void showSearchScreen() {
         if (currentUser == null) {
             showMessage("You must create an account first.");
@@ -95,7 +126,14 @@ public class LibraryCatalogGUI extends Application {
             String author = authorField.getText();
             String genre = genreField.getText();
             String yearText = yearField.getText();
-            int year = (yearText.isEmpty()) ? -1 : Integer.parseInt(yearText);
+
+            int year;
+            try {
+                year = yearText.isEmpty() ? -1 : Integer.parseInt(yearText);
+            } catch (NumberFormatException ex) {
+                showMessage("Error: Please enter a valid number for the year.");
+                return;
+            }
 
             List<Book> books = libraryModel.searchBooks(title, author, genre, year);
             displaySearchResults(books, resultLabel);
@@ -107,6 +145,7 @@ public class LibraryCatalogGUI extends Application {
         searchStage.setScene(searchScene);
         searchStage.show();
     }
+
     private void displaySearchResults(List<Book> books, Label resultLabel) {
         if (books.isEmpty()) {
             resultLabel.setText("No books found.");
@@ -121,6 +160,15 @@ public class LibraryCatalogGUI extends Application {
             resultLabel.setText(resultText.toString());
         }
     }
+
+    private void showBookmarksScreen() {
+        // To Be Implemented: Display bookmarks linked to the user account
+    }
+
+    private void showNotificationsScreen() {
+        // To Be Implemented: Display notifications for new book releases
+    }
+
     private void showMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
