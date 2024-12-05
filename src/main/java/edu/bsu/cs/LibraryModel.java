@@ -4,50 +4,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryModel {
-    private List<Book> books;
+
+    private List<User> users = new ArrayList<>();
+    private List<Book> books = new ArrayList<>();
+    private List<Notification> notifications = new ArrayList<>();
 
     public LibraryModel() {
-        // Sample books added to the catalog
-        books = new ArrayList<>();
-        books.add(new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1925));
-        books.add(new Book("1984", "George Orwell", "Dystopian", 1949));
-        books.add(new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 1960));
+        // Create a test account for debugging
+        createAccount("testUser", "testPassword");
     }
 
-    public List<Book> searchBooks(String query, String author, String genre, String year) {
-        List<Book> result = new ArrayList<>();
-        for (Book book : books) {
-            // Convert the year to a string
-            String yearStr = String.valueOf(book.getYear());
+    public boolean createAccount(String username, String password) {
+        if (users.stream().anyMatch(user -> user.getUsername().equals(username))) {
+            System.out.println("DEBUG: Username already exists: " + username);
+            return false; // Username already exists
+        }
+        String hashedPassword = PasswordHasher.hash(password);
+        System.out.println("DEBUG: Creating account with username = " + username + ", hashedPassword = " + hashedPassword);
+        users.add(new User(username, hashedPassword));
+        return true;
+    }
 
-            // Search by title, author, genre, or year based on input
-            boolean matches = (book.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                    book.getAuthor().toLowerCase().contains(query.toLowerCase()) ||
-                    book.getGenre().toLowerCase().contains(query.toLowerCase()) ||
-                    yearStr.contains(year));  // Compare year as a String
+    public User login(String username, String password) {
+        String hashedPassword = PasswordHasher.hash(password);
+        System.out.println("DEBUG: Attempting login for username = " + username + ", hashedPassword = " + hashedPassword);
 
-            // Check if any specific filters (author, genre, year) match
-            if (!author.isEmpty() && !book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
-                continue;
-            }
-            if (!genre.isEmpty() && !book.getGenre().toLowerCase().contains(genre.toLowerCase())) {
-                continue;
-            }
-            if (!year.isEmpty() && !yearStr.contains(year)) {  // Compare year as a String
-                continue;
-            }
-
-            // If a match is found, add the book to the result list
-            if (matches) {
-                result.add(book);
+        for (User user : users) {
+            System.out.println("DEBUG: Checking user: " + user.getUsername() + ", storedHashedPassword = " + user.getPasswordHash());
+            if (user.getUsername().equals(username) && PasswordHasher.verify(password, user.getPasswordHash())) {
+                System.out.println("DEBUG: Login successful for username = " + username);
+                return user;
             }
         }
-        return result;
+        System.out.println("DEBUG: Login failed for username = " + username);
+        return null; // Invalid credentials
     }
 
-    // Method to get all books in the catalog
+    public List<Book> searchBooks(String query, String s, String s1) {
+
+        return List.of();
+    }
+
+    public List<Book> getReadingList(User currentUser) {
+
+        return List.of();
+    }
+
     public List<Book> getAllBooks() {
-        return books;
+
+        return List.of();
     }
 
     public void addBook(Book book) {
