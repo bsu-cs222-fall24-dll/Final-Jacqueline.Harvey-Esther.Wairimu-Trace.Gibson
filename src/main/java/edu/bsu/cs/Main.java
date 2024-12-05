@@ -1,51 +1,31 @@
 package edu.bsu.cs;
+
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        LibraryModel libraryModel = new LibraryModel();
 
-        DatabaseManager dbManager = new DatabaseManager("books.db");
-        ReadingList readingList = new ReadingList(dbManager);
-        Notification notification = new Notification(dbManager);
-        Bookmark bookmark = new Bookmark(dbManager);
-
-        LibraryModel catalog = new LibraryModel();
-        LibraryController controller = new LibraryController(catalog);
-
-        controller.addBook(new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 1960));
-        controller.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
-        controller.addBook(new Book("Moby Dick", "Herman Melville", "Adventure", 1851));
-
-        int totalBooks = controller.getBookCount();
-        System.out.println("Total number of books in the catalog: " + totalBooks);
-
-        List<Book> allBooks = catalog.getAllBooks();
-        System.out.println("\nBooks in the catalog:");
-        for (Book book : allBooks) {
-            System.out.println("Title: " + book.title() + ", Author: " + book.author() +
-                    ", Genre: " + book.genre() + ", Year: " + book.year());
-        }
-        User user = new User("Bill Graham", "password123");
-        user.addFavouriteBook(new Book("1984", "George Orwell", "Dystopian", 1949));
-
-        List<Book> recommendations = controller.getUserRecommendations(user);
-        System.out.println("\nRecommended books:");
-        for (Book recBook : recommendations) {
-            System.out.println("Title: " + recBook.title() + "\nAuthor: " + recBook.author() + "\n");
+        // Test search by year
+        List<Book> booksFrom1960 = libraryModel.searchBooks(null, null, null, 2002);
+        if (!booksFrom1960.isEmpty()) {
+            System.out.println("Books found from 2002:");
+            for (Book book : booksFrom1960) {
+                System.out.println("- " + book.getTitle() + " by " + book.getAuthor());
+            }
+        } else {
+            System.out.println("No books found from 2002.");
         }
 
-        Book book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1925);
-        readingList.addBook(book1, "Classics");
-
-        notification.addNotification(1, "2024-01-01");
-
-        bookmark.addBookmark(0);
-
-        System.out.println("Books in Classics: " + readingList.getBooksByCategory("Classics"));
-        System.out.println("Notifications: " + notification.getNotifications());
-        System.out.println("Bookmarks: " + bookmark.getBookmarks());
+        // Test search by genre
+        List<Book> christianLivingBooks = libraryModel.searchBooks(null, null, "Christian Living", null);
+        if (!christianLivingBooks.isEmpty()) {
+            System.out.println("Christian Living books found:");
+            for (Book book : christianLivingBooks) {
+                System.out.println("- " + book.getTitle() + " by " + book.getAuthor());
+            }
+        } else {
+            System.out.println("No Christian Living books found.");
+        }
     }
 }
-
-
-

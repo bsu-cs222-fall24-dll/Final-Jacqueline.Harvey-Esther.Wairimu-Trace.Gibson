@@ -4,57 +4,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryModel {
-
     private List<User> users = new ArrayList<>();
     private List<Book> books = new ArrayList<>();
-    private List<Notification> notifications = new ArrayList<>();
 
     public LibraryModel() {
-        // Create a test account for debugging
-        createAccount("testUser", "testPassword");
+        addBook(new Book("The Purpose Driven Life", "Rick Warren", "Christian Living", 2002));
+        addBook(new Book("Mere Christianity", "C.S. Lewis", "Apologetics", 1952));
+        addBook(new Book("The Pilgrim's Progress", "John Bunyan", "Allegory", 1678));
+        addBook(new Book("The Case for Christ", "Lee Strobel", "Christian Apologetics", 1998));
+        addBook(new Book("Crazy Love", "Francis Chan", "Christian Living", 2008));
+        addBook(new Book("Radical", "David Platt", "Christian Living", 2010));
+        addBook(new Book("Heaven is for Real", "Todd Burpo", "Memoir", 2010));
+        addBook(new Book("God's Not Dead", "Rice Broocks", "Apologetics", 2013));
+        addBook(new Book("Jesus Calling", "Sarah Young", "Devotional", 2004));
+        addBook(new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 1960));
+        addBook(new Book("A Grief Observed", "C.S. Lewis", "Christian Memoir", 1961));
+        addBook(new Book("The Power of a Praying Wife", "Stormie Omartian", "Christian Living", 1997));
     }
 
     public boolean createAccount(String username, String password) {
-        if (users.stream().anyMatch(user -> user.getUsername().equals(username))) {
-            System.out.println("DEBUG: Username already exists: " + username);
-            return false; // Username already exists
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return false; // Username already exists
+            }
         }
         String hashedPassword = PasswordHasher.hash(password);
-        System.out.println("DEBUG: Creating account with username = " + username + ", hashedPassword = " + hashedPassword);
         users.add(new User(username, hashedPassword));
         return true;
     }
 
     public User login(String username, String password) {
-        String hashedPassword = PasswordHasher.hash(password);
-        System.out.println("DEBUG: Attempting login for username = " + username + ", hashedPassword = " + hashedPassword);
-
         for (User user : users) {
-            System.out.println("DEBUG: Checking user: " + user.getUsername() + ", storedHashedPassword = " + user.getPasswordHash());
-            if (user.getUsername().equals(username) && PasswordHasher.verify(password, user.getPasswordHash())) {
-                System.out.println("DEBUG: Login successful for username = " + username);
+            if (user.getUsername().equals(username) &&
+                    PasswordHasher.verify(password, user.getPasswordHash())) {
                 return user;
             }
         }
-        System.out.println("DEBUG: Login failed for username = " + username);
         return null; // Invalid credentials
     }
 
-    public List<Book> searchBooks(String query, String s, String s1) {
+    public List<Book> searchBooks(String title, String author, String genre, Integer year) {
+        List<Book> results = new ArrayList<>();
+        for (Book book : books) {
+            boolean matchesTitle = (title == null || title.isEmpty() || book.getTitle().toLowerCase().contains(title.toLowerCase()));
+            boolean matchesAuthor = (author == null || author.isEmpty() || book.getAuthor().toLowerCase().contains(author.toLowerCase()));
+            boolean matchesGenre = (genre == null || genre.isEmpty() || book.getGenre().toLowerCase().contains(genre.toLowerCase()));
+            boolean matchesYear = (year == null || book.getYear() == year);
 
-        return List.of();
-    }
-
-    public List<Book> getReadingList(User currentUser) {
-
-        return List.of();
-    }
-
-    public List<Book> getAllBooks() {
-
-        return List.of();
+            if (matchesTitle && matchesAuthor && matchesGenre && matchesYear) {
+                results.add(book);
+            }
+        }
+        return results;
     }
 
     public void addBook(Book book) {
+        books.add(book); // Add book to the catalog
+    }
+
+    public List<Book> getAllBooks() {
+        return new ArrayList<>(books); // Return all books in the catalog
+    }
+
+    // For recommendations (simple logic here, you can improve based on preferences)
+    public List<Book> getRecommendations() {
+        List<Book> recommendedBooks = new ArrayList<>();
+        // Example logic: Recommend books published after 2000
+        for (Book book : books) {
+            if (book.getYear() > 2000) {
+                recommendedBooks.add(book);
+            }
+        }
+        return recommendedBooks;
     }
 }
