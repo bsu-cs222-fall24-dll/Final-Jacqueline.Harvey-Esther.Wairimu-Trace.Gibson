@@ -3,8 +3,8 @@ package edu.bsu.cs;
 import java.util.List;
 
 public class User {
-    private String username;
-    private String passwordHash;
+    private final String username;
+    private final String passwordHash;
 
     public User(String username, String passwordHash) {
         this.username = username;

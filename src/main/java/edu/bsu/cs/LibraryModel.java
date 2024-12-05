@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryModel {
-    private List<User> users = new ArrayList<>();
-    private List<Book> books = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
 
     public LibraryModel() {
         addBook(new Book("The Purpose Driven Life", "Rick Warren", "Christian Living", 2002));
@@ -25,7 +25,7 @@ public class LibraryModel {
     public boolean createAccount(String username, String password) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                return false; // Username already exists
+                return false;
             }
         }
         String hashedPassword = PasswordHasher.hash(password);
@@ -40,7 +40,7 @@ public class LibraryModel {
                 return user;
             }
         }
-        return null; // Invalid credentials
+        return null;
     }
 
     public List<Book> searchBooks(String title, String author, String genre, Integer year) {
@@ -59,22 +59,32 @@ public class LibraryModel {
     }
 
     public void addBook(Book book) {
-        books.add(book); // Add book to the catalog
+        books.add(book);
+
     }
 
-    public List<Book> getAllBooks() {
-        return new ArrayList<>(books); // Return all books in the catalog
-    }
-
-    // For recommendations (simple logic here, you can improve based on preferences)
     public List<Book> getRecommendations() {
         List<Book> recommendedBooks = new ArrayList<>();
-        // Example logic: Recommend books published after 2000
         for (Book book : books) {
             if (book.getYear() > 2000) {
                 recommendedBooks.add(book);
             }
         }
         return recommendedBooks;
+    }
+
+    public List<String> getReadingList(User loggedInUser) {
+
+        return List.of();
+    }
+
+    public List<String> getBookmarks(User loggedInUser) {
+
+        return List.of();
+    }
+
+    public int getTotalBooks() {
+
+        return 0;
     }
 }

@@ -9,10 +9,6 @@ public class Bookmark {
         this.dbManager = dbManager;
     }
 
-    public void addBookmark(int bookId) {
-        dbManager.addBookmark(bookId);
-    }
-
     public List<Integer> getBookmarks() {
         return dbManager.getBookmarks();
     }

@@ -1,20 +1,21 @@
 package edu.bsu.cs;
 
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
 public class LibraryCatalogGUI extends Application {
-    private LibraryModel libraryModel = new LibraryModel();
+    private final LibraryModel libraryModel = new LibraryModel();
     private TextField titleField, authorField, genreField, yearField, usernameField, passwordField;
     private ListView<String> searchResults;
-    private ListView<String> recommendedBooks, readingList;
+    private ListView<String> recommendedBooks;
     private User loggedInUser = null;
+    private Label totalBooksLabel;
 
     @Override
     public void start(Stage primaryStage) {
@@ -26,9 +27,8 @@ public class LibraryCatalogGUI extends Application {
         newPasswordField.setPromptText("New Password");
 
         Button createNewAccountButton = new Button("Create New Account");
-        createNewAccountButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        styleButton(createNewAccountButton, Color.GREEN);
 
-        // Login UI
         usernameField = new TextField();
         usernameField.setPromptText("Username");
 
@@ -36,9 +36,8 @@ public class LibraryCatalogGUI extends Application {
         passwordField.setPromptText("Password");
 
         Button loginButton = new Button("Login");
-        loginButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white;");
+        styleButton(loginButton, Color.DARKBLUE);
 
-        // Search UI
         titleField = new TextField();
         titleField.setPromptText("Search by title");
 
@@ -52,13 +51,18 @@ public class LibraryCatalogGUI extends Application {
         yearField.setPromptText("Search by year");
 
         Button searchButton = new Button("Search");
-        searchButton.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white;");
+        styleButton(searchButton, Color.ORANGE);
 
         searchResults = new ListView<>();
         recommendedBooks = new ListView<>();
-        readingList = new ListView<>();
+        totalBooksLabel = new Label("Total Books: 0");
 
-        // Login logic
+        Button viewReadingListButton = new Button("View Reading List");
+        styleButton(viewReadingListButton, Color.CORAL);
+
+        Button viewBookmarksButton = new Button("View Bookmarks");
+        styleButton(viewBookmarksButton, Color.CYAN);
+
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -66,26 +70,21 @@ public class LibraryCatalogGUI extends Application {
             if (loggedInUser != null) {
                 showAlert("Success", "Logged in successfully!");
                 clearLoginFields();
-                showCatalogUI();
             } else {
                 showAlert("Error", "Invalid login credentials!");
             }
         });
 
-        // Account creation logic
         createNewAccountButton.setOnAction(e -> {
             String username = newUsernameField.getText();
             String password = newPasswordField.getText();
             boolean success = libraryModel.createAccount(username, password);
             if (success) {
                 showAlert("Success", "Account created successfully!");
-                showLoginUI();
             } else {
                 showAlert("Error", "Username already exists!");
             }
         });
-
-        // Book search logic
         searchButton.setOnAction(e -> {
             if (loggedInUser == null) {
                 showAlert("Error", "Please log in first.");
@@ -103,68 +102,65 @@ public class LibraryCatalogGUI extends Application {
             }
 
             List<Book> results = libraryModel.searchBooks(titleField.getText(), authorField.getText(), genreField.getText(), year);
-            searchResults.getItems().clear(); // Clear previous search results
+            searchResults.getItems().clear();
             if (results.isEmpty()) {
-                showAlert("No Books Found", "No books match your search criteria.");
+                searchResults.getItems().add("Book not found.");
             } else {
                 for (Book book : results) {
-                    searchResults.getItems().add(book.getTitle() + " by " + book.getAuthor() + " (" + book.getYear() + ")");
+                    searchResults.getItems().add(book.getTitle() + " by " + book.getAuthor());
                 }
             }
             displayRecommendations();
+            updateBookCount();
         });
-        GridPane layout = new GridPane();
-        layout.setHgap(10);
-        layout.setVgap(10);
-        layout.setPadding(new javafx.geometry.Insets(20));
 
-        layout.add(newUsernameField, 0, 0);
-        layout.add(newPasswordField, 1, 0);
-        layout.add(createNewAccountButton, 2, 0);
+        viewReadingListButton.setOnAction(e -> {
+            if (loggedInUser != null) {
+                List<String> readingList = libraryModel.getReadingList(loggedInUser);
+                if (readingList.isEmpty()) {
+                    showAlert("Info", "Your reading list is empty.");
+                } else {
+                    showAlert("Reading List", String.join("\n", readingList));
+                }
+            } else {
+                showAlert("Error", "Please log in to view your reading list.");
+            }
+        });
 
-        // Login layout
-        layout.add(usernameField, 0, 1);
-        layout.add(passwordField, 1, 1);
-        layout.add(loginButton, 2, 1);
+        viewBookmarksButton.setOnAction(e -> {
+            if (loggedInUser != null) {
+                List<String> bookmarks = libraryModel.getBookmarks(loggedInUser);
+                if (bookmarks.isEmpty()) {
+                    showAlert("Info", "You have no bookmarks.");
+                } else {
+                    showAlert("Bookmarks", String.join("\n", bookmarks));
+                }
+            } else {
+                showAlert("Error", "Please log in to view your bookmarks.");
+            }
+        });
+        VBox layout = new VBox(15);
+        layout.setStyle("-fx-background-color: #F4F4F4;");
+        layout.getChildren().addAll(newUsernameField, newPasswordField, createNewAccountButton,
+                usernameField, passwordField, loginButton,
+                titleField, authorField, genreField, yearField, searchButton, searchResults, recommendedBooks,
+                totalBooksLabel, viewReadingListButton, viewBookmarksButton);
 
-        // Search layout
-        layout.add(titleField, 0, 2);
-        layout.add(authorField, 1, 2);
-        layout.add(genreField, 0, 3);
-        layout.add(yearField, 1, 3);
-        layout.add(searchButton, 2, 3);
-
-        // Adding list views for search results and recommendations
-        layout.add(searchResults, 0, 4, 3, 1);
-        layout.add(recommendedBooks, 0, 5, 3, 1);
-        layout.add(readingList, 0, 6, 3, 1);
-
-        GridPane.setHalignment(createNewAccountButton, HPos.CENTER);
-        GridPane.setHalignment(loginButton, HPos.CENTER);
-        GridPane.setHalignment(searchButton, HPos.CENTER);
-
-        // Set up the scene and stage
-        Scene scene = new Scene(layout, 800, 700);
+        Scene scene = new Scene(layout, 900, 700);
         primaryStage.setTitle("Library Catalog");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void showCatalogUI() {
-        // Clear all previous lists
-        searchResults.getItems().clear();
-        recommendedBooks.getItems().clear();
-        readingList.getItems().clear();
-
-        // Display additional catalog-related sections
-        readingList.getItems().add("Reading List: Your current books to read.");
-        recommendedBooks.getItems().add("Recommended Books: Books based on your preferences.");
-        searchResults.getItems().add("Search for books, authors, and genres here.");
+    private void styleButton(Button button, Color backgroundColor) {
+        button.setTextFill(Color.WHITE);
+        button.setStyle("-fx-background-color: " + toHexString(backgroundColor) + "; -fx-font-size: 14px; -fx-border-radius: 5;");
+        button.setPrefHeight(25);
+        button.setPrefWidth(250);
     }
 
-    private void showLoginUI() {
-        usernameField.setVisible(true);
-        passwordField.setVisible(true);
+    private String toHexString(Color color) {
+        return String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
     }
 
     private void displayRecommendations() {
@@ -173,6 +169,11 @@ public class LibraryCatalogGUI extends Application {
         for (Book book : recommendations) {
             recommendedBooks.getItems().add(book.getTitle() + " by " + book.getAuthor());
         }
+    }
+
+    private void updateBookCount() {
+        int totalBooks = libraryModel.getTotalBooks();
+        totalBooksLabel.setText("Total Books: " + totalBooks);
     }
 
     private void showAlert(String title, String message) {
