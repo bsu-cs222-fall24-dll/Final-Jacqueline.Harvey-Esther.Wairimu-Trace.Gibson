@@ -1,6 +1,7 @@
 package edu.bsu.cs;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -53,6 +54,10 @@ public class LibraryCatalogGUI extends Application {
         Button searchButton = new Button("Search");
         styleButton(searchButton, Color.ORANGE);
 
+        Button exitButton = new Button("Exit");
+        styleButton(exitButton, Color.RED);
+        exitButton.setOnAction(e -> Platform.exit());
+
         searchResults = new ListView<>();
         recommendedBooks = new ListView<>();
         totalBooksLabel = new Label("Total Books: 0");
@@ -85,6 +90,7 @@ public class LibraryCatalogGUI extends Application {
                 showAlert("Error", "Username already exists!");
             }
         });
+
         searchButton.setOnAction(e -> {
             if (loggedInUser == null) {
                 showAlert("Error", "Please log in first.");
@@ -139,12 +145,13 @@ public class LibraryCatalogGUI extends Application {
                 showAlert("Error", "Please log in to view your bookmarks.");
             }
         });
+
         VBox layout = new VBox(15);
         layout.setStyle("-fx-background-color: #F4F4F4;");
         layout.getChildren().addAll(newUsernameField, newPasswordField, createNewAccountButton,
                 usernameField, passwordField, loginButton,
                 titleField, authorField, genreField, yearField, searchButton, searchResults, recommendedBooks,
-                totalBooksLabel, viewReadingListButton, viewBookmarksButton);
+                totalBooksLabel, viewReadingListButton, viewBookmarksButton, exitButton);
 
         Scene scene = new Scene(layout, 900, 700);
         primaryStage.setTitle("Library Catalog");
